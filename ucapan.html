@@ -25,9 +25,9 @@
 
       .grid-masonry {
         column-count: 1;
-        gap: 1.5rem;
+        column-gap: 1.5rem;
       }
-      @media (min-width: 768px) {
+      @media (min-width: 640px) {
         .grid-masonry {
           column-count: 2;
         }
@@ -47,13 +47,14 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         border: 1px solid #f3f4f6;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
       }
       .wish-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 30px rgba(190, 24, 93, 0.1);
         border-color: #fbcfe8;
       }
-
       .quote-icon {
         font-size: 4rem;
         position: absolute;
@@ -62,11 +63,18 @@
         color: #fdf2f8;
         z-index: 0;
       }
+
+      /* Mobile Padding */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: 80px;
+        }
+      }
     </style>
   </head>
   <body class="text-gray-800">
     <nav
-      class="fixed top-6 left-0 right-0 z-50 flex justify-center w-full px-4"
+      class="hidden md:flex fixed top-6 left-0 right-0 z-50 justify-center w-full px-4"
     >
       <div
         class="bg-white/80 backdrop-blur-md rounded-full px-8 py-4 flex gap-8 shadow-xl border border-white/50"
@@ -84,23 +92,29 @@
       </div>
     </nav>
 
-    <section class="py-32 px-6 container mx-auto max-w-6xl">
-      <div class="text-center mb-20">
+    <section class="pt-10 md:pt-32 px-6 container mx-auto max-w-6xl">
+      <div class="text-center mb-10 md:mb-20">
         <p
-          class="text-pink-500 font-bold tracking-widest uppercase text-xs mb-3"
+          class="text-pink-500 font-bold tracking-widest uppercase text-xs mb-3 animate-pulse"
         >
           Community Love
         </p>
-        <h2 class="text-5xl font-serif text-gray-900">
+        <h2 class="text-4xl md:text-5xl font-serif text-gray-900">
           Warmest <span class="italic text-pink-600">Wishes</span>
         </h2>
+        <p class="text-gray-400 mt-4 max-w-lg mx-auto text-sm">
+          Terima kasih untuk semua doa dan ucapan manis yang sudah kalian
+          berikan. It means the world to me! ❤️
+        </p>
       </div>
 
       <div class="grid-masonry">
-        <div class="wish-card relative overflow-hidden" data-aos="fade-up">
+        <div class="wish-card" data-aos="fade-up">
           <i class="fas fa-quote-right quote-icon"></i>
           <div class="relative z-10">
-            <p class="text-gray-600 leading-relaxed text-lg italic">
+            <p
+              class="text-gray-600 leading-relaxed italic text-sm md:text-base"
+            >
               "Happy birthday tes! Semoga di umur yang baru ini makin sukses,
               makin cantik, dan selalu bahagia sama pacarnya. Langgeng terus ya
               kalian!"
@@ -119,14 +133,12 @@
           </div>
         </div>
 
-        <div
-          class="wish-card relative overflow-hidden"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
+        <div class="wish-card" data-aos="fade-up" data-aos-delay="100">
           <i class="fas fa-quote-right quote-icon"></i>
           <div class="relative z-10">
-            <p class="text-gray-600 leading-relaxed text-lg italic">
+            <p
+              class="text-gray-600 leading-relaxed italic text-sm md:text-base"
+            >
               "Selamat ulang tahun! Doa terbaik buat kamu. Jangan lupa traktiran
               baksonya ditunggu minggu depan wkwk."
             </p>
@@ -144,14 +156,12 @@
           </div>
         </div>
 
-        <div
-          class="wish-card relative overflow-hidden"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
+        <div class="wish-card" data-aos="fade-up" data-aos-delay="200">
           <i class="fas fa-quote-right quote-icon"></i>
           <div class="relative z-10">
-            <p class="text-gray-600 leading-relaxed text-lg italic">
+            <p
+              class="text-gray-600 leading-relaxed italic text-sm md:text-base"
+            >
               "Happy Level Up Day! Semoga tahun ini semua wish-list kamu
               tercapai satu per satu. Semangat terus!"
             </p>
@@ -170,54 +180,46 @@
         </div>
       </div>
 
-      <div
-        class="max-w-2xl mx-auto mt-24 bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-gray-100"
-        data-aos="zoom-in"
-      >
-        <h3 class="text-2xl font-serif font-bold text-center mb-8">
-          Send Your Love 💌
-        </h3>
-        <form class="space-y-6">
-          <div>
-            <label
-              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
-              >Nama Kamu</label
-            >
-            <input
-              type="text"
-              class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-pink-500 transition"
-              placeholder="Tulis namamu..."
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
-              >Ucapan & Doa</label
-            >
-            <textarea
-              rows="4"
-              class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-pink-500 transition resize-none"
-              placeholder="Tulis harapanmu di sini..."
-            ></textarea>
-          </div>
-          <button
-            type="button"
-            class="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-pink-600 transition duration-300 shadow-lg"
-          >
-            Kirim Ucapan
-          </button>
-        </form>
-      </div>
-
-      <div class="text-center mt-16 pb-8 border-t border-gray-200 pt-8">
+      <div class="text-center mt-12 pb-8 border-t border-gray-100 pt-8">
         <a
           href="index.html"
-          class="text-gray-400 hover:text-pink-600 transition font-medium text-sm"
+          class="inline-block text-pink-600 hover:text-pink-700 font-bold text-sm transition"
         >
-          &larr; Back to Home
+          &larr; Kembali ke Home
         </a>
       </div>
     </section>
+
+    <nav
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 z-[100] pb-safe"
+    >
+      <div class="flex justify-around items-center h-16">
+        <a
+          href="index.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-home text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Home</span></a
+        >
+        <a
+          href="timeline.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-history text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Journey</span></a
+        >
+        <a
+          href="pencapaian.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-gift text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Secret</span></a
+        >
+        <a
+          href="ucapan.html"
+          class="flex flex-col items-center justify-center w-full h-full text-pink-600 font-bold transition"
+          ><i class="fas fa-heart text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Wishes</span></a
+        >
+      </div>
+    </nav>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
