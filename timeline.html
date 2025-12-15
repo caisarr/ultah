@@ -15,44 +15,41 @@
       rel="stylesheet"
     />
     <style>
-      body {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        background: #fffcfc;
-        overflow-x: hidden;
-      }
-      .font-serif {
-        font-family: "Playfair Display", serif;
-      }
+      body { font-family: "Plus Jakarta Sans", sans-serif; background: #fffcfc; overflow-x: hidden; scroll-behavior: smooth; }
+      .font-serif { font-family: "Playfair Display", serif; }
 
-      .timeline-line {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          #e5e7eb 20%,
-          #e5e7eb 80%,
-          transparent
-        );
-        transform: translateX(-50%);
-      }
-      .card-shadow {
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-      }
-      .image-tilt {
-        transition: transform 0.5s ease;
-      }
-      .image-tilt:hover {
-        transform: scale(1.02) rotate(1deg);
+      /* Garis Timeline Tengah */
+      .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, #fbcfe8 10%, #db2777 50%, #fbcfe8 90%, transparent); transform: translateX(-50%); }
+
+      .card-shadow { box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08); }
+
+      /* Efek Hover Gambar */
+      .image-container { overflow: hidden; border-radius: 0.75rem; cursor: zoom-in; position: relative; }
+      .image-container img { transition: transform 0.7s ease; width: 100%; height: 100%; object-fit: cover; }
+      .image-container:hover img { transform: scale(1.1); }
+      .image-overlay { position: absolute; inset: 0; bg-black/20; opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); }
+      .image-container:hover .image-overlay { opacity: 1; }
+
+      /* Scroll Progress Bar */
+      #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 9999; }
+      #progress-bar { height: 100%; background: #db2777; width: 0%; border-radius: 0 2px 2px 0; box-shadow: 0 0 10px rgba(219, 39, 119, 0.5); }
+
+      /* Lightbox (Zoom) */
+      #lightbox { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+      #lightbox.active { opacity: 1; pointer-events: all; }
+
+      /* Mobile Adjustment */
+      @media (max-width: 768px) {
+        body { padding-bottom: 80px; }
+        .timeline-line { left: 20px; transform: none; } /* Garis pindah ke kiri di HP */
       }
     </style>
   </head>
   <body class="text-gray-800">
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
     <nav
-      class="fixed top-6 left-0 right-0 z-50 flex justify-center w-full px-4"
+      class="hidden md:flex fixed top-6 left-0 right-0 z-50 justify-center w-full px-4"
     >
       <div
         class="bg-white/80 backdrop-blur-md rounded-full px-8 py-4 flex gap-8 shadow-xl border border-white/50"
@@ -68,159 +65,484 @@
       </div>
     </nav>
 
-    <section class="pt-40 pb-20 text-center px-6">
-      <p
-        class="text-pink-600 tracking-widest text-sm uppercase font-bold mb-4 animate-pulse"
-      >
-        Together For
-      </p>
-      <div
-        id="timer"
-        class="flex flex-wrap justify-center gap-4 md:gap-8 font-serif text-3xl md:text-5xl text-gray-900 mb-8"
-      >
-        <div class="flex flex-col">
-          <span id="days">00</span
-          ><span
-            class="text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
-            >Days</span
-          >
+    <section
+      class="pt-12 md:pt-40 pb-10 md:pb-20 text-center px-6 bg-gradient-to-b from-pink-50 to-transparent"
+    >
+      <div data-aos="fade-down">
+        <p
+          class="text-pink-600 tracking-widest text-xs md:text-sm uppercase font-bold mb-4 animate-pulse"
+        >
+          <i class="fas fa-heart mr-2"></i>Together For
+        </p>
+        <div
+          id="timer"
+          class="flex flex-wrap justify-center gap-3 md:gap-8 font-serif text-3xl md:text-6xl text-gray-900 mb-6 md:mb-8 drop-shadow-sm"
+        >
+          <div class="flex flex-col">
+            <span id="days">00</span
+            ><span
+              class="text-[10px] md:text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
+              >Days</span
+            >
+          </div>
+          <div class="text-pink-400 animate-pulse">:</div>
+          <div class="flex flex-col">
+            <span id="hours">00</span
+            ><span
+              class="text-[10px] md:text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
+              >Hours</span
+            >
+          </div>
+          <div class="text-pink-400 animate-pulse">:</div>
+          <div class="flex flex-col">
+            <span id="minutes">00</span
+            ><span
+              class="text-[10px] md:text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
+              >Mins</span
+            >
+          </div>
         </div>
-        <div class="text-pink-300">:</div>
-        <div class="flex flex-col">
-          <span id="hours">00</span
-          ><span
-            class="text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
-            >Hours</span
-          >
-        </div>
-        <div class="text-pink-300">:</div>
-        <div class="flex flex-col">
-          <span id="minutes">00</span
-          ><span
-            class="text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
-            >Mins</span
-          >
-        </div>
-        <div class="text-pink-300">:</div>
-        <div class="flex flex-col">
-          <span id="seconds">00</span
-          ><span
-            class="text-xs font-sans text-gray-400 uppercase tracking-widest mt-2"
-            >Secs</span
-          >
-        </div>
+        <p class="text-gray-500 italic text-sm md:text-lg max-w-xl mx-auto">
+          "Setiap detiknya adalah halaman baru di buku cerita kita."
+        </p>
       </div>
-      <p class="text-gray-400 italic">
-        ...and counting every beautiful moment.
-      </p>
     </section>
 
-    <section class="max-w-5xl mx-auto px-6 pb-32 relative">
-      <div class="timeline-line hidden md:block"></div>
+    <section class="max-w-6xl mx-auto px-6 pb-20 md:pb-32 relative">
+      <div class="timeline-line"></div>
 
       <div
-        class="grid md:grid-cols-2 gap-12 items-center mb-24 relative"
+        class="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16 md:mb-24 relative pl-8 md:pl-0"
         data-aos="fade-up"
       >
-        <div class="md:text-right order-2 md:order-1 pr-0 md:pr-12">
+        <div
+          class="absolute left-[11px] top-0 md:left-1/2 md:-ml-[9px] w-[18px] h-[18px] bg-pink-500 rounded-full border-4 border-white shadow-lg z-10"
+        ></div>
+
+        <div class="md:text-right order-2 md:order-1 text-left">
           <span
-            class="text-6xl text-gray-100 font-serif absolute -top-10 right-10 -z-10"
+            class="text-6xl text-gray-100 font-serif absolute -top-10 right-10 -z-10 hidden md:block"
             >01</span
           >
-          <h3 class="text-3xl font-serif text-gray-900 mb-4">
+          <div
+            class="inline-block px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-bold mb-3"
+          >
+            The Beginning
+          </div>
+          <h3 class="text-2xl md:text-4xl font-serif text-gray-900 mb-4">
             First Encounter
           </h3>
-          <p class="text-gray-600 leading-relaxed">
-            Momen pertama kali kita ketemu di <strong>[Nama Tempat]</strong>.
-            Kamu pakai baju <strong>[Warna]</strong>, dan saat itu aku tahu,
-            "She is the one".
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4">
+            Ingat nggak waktu pertama kali kita ketemu di
+            <strong>[Lokasi]</strong>? Kamu pakai baju
+            <strong>[Warna]</strong> dan senyum kamu manis banget hari itu.
           </p>
-          <p
-            class="text-pink-500 text-sm font-bold mt-4 uppercase tracking-widest"
-          >
-            [Tanggal Pertemuan]
-          </p>
+          <div class="flex items-center md:justify-end gap-4">
+            <span
+              class="text-gray-400 text-xs font-bold uppercase tracking-widest"
+              ><i class="far fa-calendar mr-2"></i>[Tanggal]</span
+            >
+            <button
+              onclick="toggleLike(this)"
+              class="group flex items-center gap-1 text-gray-400 hover:text-red-500 transition"
+            >
+              <i
+                class="far fa-heart group-hover:scale-125 transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
         </div>
         <div class="order-1 md:order-2">
           <div
-            class="relative p-3 bg-white card-shadow rounded-2xl rotate-2 hover:rotate-0 transition duration-500"
+            class="bg-white p-2 rounded-2xl card-shadow rotate-1 hover:rotate-0 transition duration-500"
           >
-            <img
-              src="https://via.placeholder.com/500x350"
-              class="rounded-xl w-full object-cover image-tilt"
-            />
+            <div
+              class="image-container h-[250px] md:h-[350px]"
+              onclick="openLightbox(this)"
+            >
+              <img src="https://via.placeholder.com/600x400" alt="First Meet" />
+              <div class="image-overlay">
+                <i class="fas fa-search-plus text-white text-3xl"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div
-        class="grid md:grid-cols-2 gap-12 items-center mb-24 relative"
+        class="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16 md:mb-24 relative pl-8 md:pl-0"
         data-aos="fade-up"
       >
+        <div
+          class="absolute left-[11px] top-0 md:left-1/2 md:-ml-[9px] w-[18px] h-[18px] bg-white border-4 border-pink-500 rounded-full shadow-lg z-10"
+        ></div>
+
         <div class="order-1 pl-0 md:pl-12">
           <div
-            class="relative p-3 bg-white card-shadow rounded-2xl -rotate-2 hover:rotate-0 transition duration-500"
+            class="bg-white p-2 rounded-2xl card-shadow -rotate-1 hover:rotate-0 transition duration-500"
           >
-            <img
-              src="https://via.placeholder.com/500x350"
-              class="rounded-xl w-full object-cover image-tilt"
-            />
+            <div
+              class="image-container h-[250px] md:h-[350px]"
+              onclick="openLightbox(this)"
+            >
+              <img src="https://via.placeholder.com/600x400" alt="Jadian" />
+              <div class="image-overlay">
+                <i class="fas fa-search-plus text-white text-3xl"></i>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="order-2">
+        <div class="order-2 text-left">
           <span
-            class="text-6xl text-gray-100 font-serif absolute -top-10 left-10 -z-10"
+            class="text-6xl text-gray-100 font-serif absolute -top-10 left-10 -z-10 hidden md:block"
             >02</span
           >
-          <h3 class="text-3xl font-serif text-gray-900 mb-4">Officially Us</h3>
-          <p class="text-gray-600 leading-relaxed">
-            Hari dimana status teman berubah jadi rumah. Terima kasih sudah
-            menerima aku jadi bagian ceritamu.
-          </p>
-          <p
-            class="text-pink-500 text-sm font-bold mt-4 uppercase tracking-widest"
+          <div
+            class="inline-block px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-bold mb-3"
           >
-            [Tanggal Jadian]
+            Official
+          </div>
+          <h3 class="text-2xl md:text-4xl font-serif text-gray-900 mb-4">
+            Officially Us
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4">
+            Hari dimana kita sepakat buat jalanin ini bareng-bareng. Terima
+            kasih sudah milih aku ya.
           </p>
+          <div class="flex items-center gap-4">
+            <span
+              class="text-gray-400 text-xs font-bold uppercase tracking-widest"
+              ><i class="far fa-calendar mr-2"></i>[Tanggal]</span
+            >
+            <button
+              onclick="toggleLike(this)"
+              class="group flex items-center gap-1 text-gray-400 hover:text-red-500 transition"
+            >
+              <i
+                class="far fa-heart group-hover:scale-125 transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="text-center mt-20">
+      <div
+        class="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16 md:mb-24 relative pl-8 md:pl-0"
+        data-aos="fade-up"
+      >
+        <div
+          class="absolute left-[11px] top-0 md:left-1/2 md:-ml-[9px] w-[18px] h-[18px] bg-blue-400 rounded-full border-4 border-white shadow-lg z-10"
+        ></div>
+
+        <div class="md:text-right order-2 md:order-1 text-left">
+          <span
+            class="text-6xl text-gray-100 font-serif absolute -top-10 right-10 -z-10 hidden md:block"
+            >03</span
+          >
+          <div
+            class="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-bold mb-3"
+          >
+            Adventure
+          </div>
+          <h3 class="text-2xl md:text-4xl font-serif text-gray-900 mb-4">
+            First Trip Together
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4">
+            Liburan pertama kita ke <strong>[Tempat]</strong>. Seru banget pas
+            kita nyasar bareng tapi tetep ketawa-ketawa.
+          </p>
+          <div class="flex items-center md:justify-end gap-4">
+            <span
+              class="text-gray-400 text-xs font-bold uppercase tracking-widest"
+              ><i class="far fa-calendar mr-2"></i>[Tanggal]</span
+            >
+            <button
+              onclick="toggleLike(this)"
+              class="group flex items-center gap-1 text-gray-400 hover:text-red-500 transition"
+            >
+              <i
+                class="far fa-heart group-hover:scale-125 transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
+        </div>
+        <div class="order-1 md:order-2">
+          <div
+            class="bg-white p-2 rounded-2xl card-shadow rotate-1 hover:rotate-0 transition duration-500"
+          >
+            <div
+              class="image-container h-[250px] md:h-[350px]"
+              onclick="openLightbox(this)"
+            >
+              <img src="https://via.placeholder.com/600x400" alt="First Trip" />
+              <div class="image-overlay">
+                <i class="fas fa-search-plus text-white text-3xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16 md:mb-24 relative pl-8 md:pl-0"
+        data-aos="fade-up"
+      >
+        <div
+          class="absolute left-[11px] top-0 md:left-1/2 md:-ml-[9px] w-[18px] h-[18px] bg-white border-4 border-gray-400 rounded-full shadow-lg z-10"
+        ></div>
+
+        <div class="order-1 pl-0 md:pl-12">
+          <div
+            class="bg-white p-8 md:p-10 rounded-2xl card-shadow -rotate-1 hover:rotate-0 transition duration-500 border border-gray-100 relative overflow-hidden"
+          >
+            <i
+              class="fas fa-quote-right absolute top-4 right-4 text-6xl text-gray-100 -z-0"
+            ></i>
+            <p
+              class="font-serif text-xl md:text-2xl italic text-gray-700 relative z-10"
+            >
+              "Hubungan yang kuat bukan berarti tanpa pertengkaran, tapi tentang
+              bagaimana kita memilih untuk tetap bertahan."
+            </p>
+          </div>
+        </div>
+        <div class="order-2 text-left">
+          <span
+            class="text-6xl text-gray-100 font-serif absolute -top-10 left-10 -z-10 hidden md:block"
+            >04</span
+          >
+          <div
+            class="inline-block px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs font-bold mb-3"
+          >
+            Growing
+          </div>
+          <h3 class="text-2xl md:text-4xl font-serif text-gray-900 mb-4">
+            Through Ups & Downs
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4">
+            Kita pernah berantem hebat, pernah diem-dieman, tapi aku bersyukur
+            kita nggak pernah nyerah. Makasih udah sabar ya.
+          </p>
+          <div class="flex items-center gap-4">
+            <button
+              onclick="toggleLike(this)"
+              class="group flex items-center gap-1 text-gray-400 hover:text-red-500 transition"
+            >
+              <i
+                class="far fa-heart group-hover:scale-125 transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16 md:mb-24 relative pl-8 md:pl-0"
+        data-aos="fade-up"
+      >
+        <div
+          class="absolute left-[11px] top-0 md:left-1/2 md:-ml-[9px] w-[18px] h-[18px] bg-amber-400 rounded-full border-4 border-white shadow-lg z-10"
+        ></div>
+
+        <div class="md:text-right order-2 md:order-1 text-left">
+          <span
+            class="text-6xl text-gray-100 font-serif absolute -top-10 right-10 -z-10 hidden md:block"
+            >05</span
+          >
+          <div
+            class="inline-block px-3 py-1 bg-amber-100 text-amber-600 rounded-full text-xs font-bold mb-3"
+          >
+            Milestone
+          </div>
+          <h3 class="text-2xl md:text-4xl font-serif text-gray-900 mb-4">
+            1 Year & Counting
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4">
+            Satu tahun (atau lebih) berlalu, dan rasanya masih kayak hari
+            pertama. Semoga tahun-tahun berikutnya makin penuh berkah.
+          </p>
+          <div class="flex items-center md:justify-end gap-4">
+            <span
+              class="text-gray-400 text-xs font-bold uppercase tracking-widest"
+              ><i class="far fa-calendar mr-2"></i>[Tanggal Anniv]</span
+            >
+            <button
+              onclick="toggleLike(this)"
+              class="group flex items-center gap-1 text-gray-400 hover:text-red-500 transition"
+            >
+              <i
+                class="far fa-heart group-hover:scale-125 transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
+        </div>
+        <div class="order-1 md:order-2">
+          <div
+            class="bg-white p-2 rounded-2xl card-shadow rotate-1 hover:rotate-0 transition duration-500"
+          >
+            <div
+              class="image-container h-[250px] md:h-[350px]"
+              onclick="openLightbox(this)"
+            >
+              <img
+                src="https://via.placeholder.com/600x400"
+                alt="Anniversary"
+              />
+              <div class="image-overlay">
+                <i class="fas fa-search-plus text-white text-3xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12 md:mt-20">
         <a
           href="pencapaian.html"
-          class="inline-block px-10 py-4 bg-gray-900 text-white rounded-full hover:bg-pink-600 transition duration-300 shadow-xl"
+          class="inline-block px-10 py-4 bg-gray-900 text-white rounded-full hover:bg-pink-600 transition duration-300 shadow-xl group"
         >
-          Buka Kado Rahasia <i class="fas fa-gift ml-2"></i>
+          Buka Kado Rahasia
+          <i class="fas fa-gift ml-2 group-hover:rotate-12 transition"></i>
         </a>
       </div>
     </section>
+
+    <div
+      id="lightbox"
+      class="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
+      onclick="closeLightbox()"
+    >
+      <button
+        class="absolute top-6 right-6 text-white text-4xl hover:text-pink-500 transition"
+      >
+        &times;
+      </button>
+      <img
+        id="lightbox-img"
+        src=""
+        class="max-w-full max-h-[85vh] rounded-lg shadow-2xl transform scale-95 transition duration-300"
+      />
+    </div>
+
+    <button
+      onclick="window.scrollTo(0,0)"
+      id="backToTop"
+      class="hidden fixed bottom-24 right-6 bg-white text-pink-600 w-12 h-12 rounded-full shadow-lg z-40 items-center justify-center hover:-translate-y-1 transition duration-300 border border-pink-100"
+    >
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <nav
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 z-[100] pb-safe"
+    >
+      <div class="flex justify-around items-center h-16">
+        <a
+          href="index.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-home text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Home</span></a
+        >
+        <a
+          href="timeline.html"
+          class="flex flex-col items-center justify-center w-full h-full text-pink-600 font-bold transition"
+          ><i class="fas fa-history text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Journey</span></a
+        >
+        <a
+          href="pencapaian.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-gift text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Secret</span></a
+        >
+        <a
+          href="ucapan.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-heart text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Wishes</span></a
+        >
+      </div>
+    </nav>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       AOS.init();
 
-      // Relationship Timer (GANTI TANGGAL DI SINI)
-      const startDate = new Date("2023-01-01T00:00:00").getTime(); // Format: YYYY-MM-DD
-
+      // 1. Timer Logic
+      const startDate = new Date("2023-01-01T00:00:00"); // GANTI TANGGAL JADIAN
       setInterval(() => {
-        const now = new Date().getTime();
-        const distance = now - startDate;
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        const now = new Date();
+        const diff = now - startDate;
+        document.getElementById("days").innerText = Math.floor(
+          diff / (1000 * 60 * 60 * 24)
         );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("days").innerText = days;
-        document.getElementById("hours").innerText =
-          hours < 10 ? "0" + hours : hours;
-        document.getElementById("minutes").innerText =
-          minutes < 10 ? "0" + minutes : minutes;
-        document.getElementById("seconds").innerText =
-          seconds < 10 ? "0" + seconds : seconds;
+        document.getElementById("hours").innerText = Math.floor(
+          (diff / (1000 * 60 * 60)) % 24
+        )
+          .toString()
+          .padStart(2, "0");
+        document.getElementById("minutes").innerText = Math.floor(
+          (diff / (1000 * 60)) % 60
+        )
+          .toString()
+          .padStart(2, "0");
       }, 1000);
+
+      // 2. Lightbox Logic
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+
+      function openLightbox(element) {
+        const img = element.querySelector("img");
+        lightboxImg.src = img.src;
+        lightbox.classList.add("active");
+        lightboxImg.classList.replace("scale-95", "scale-100");
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("active");
+        lightboxImg.classList.replace("scale-100", "scale-95");
+      }
+
+      // 3. Scroll Progress & Back To Top
+      window.onscroll = function () {
+        // Progress Bar
+        let winScroll =
+          document.body.scrollTop || document.documentElement.scrollTop;
+        let height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("progress-bar").style.width = scrolled + "%";
+
+        // Back to top
+        const btn = document.getElementById("backToTop");
+        if (
+          document.body.scrollTop > 300 ||
+          document.documentElement.scrollTop > 300
+        ) {
+          btn.classList.remove("hidden");
+          btn.classList.add("flex");
+        } else {
+          btn.classList.add("hidden");
+          btn.classList.remove("flex");
+        }
+      };
+
+      // 4. Like Button Logic
+      function toggleLike(btn) {
+        const icon = btn.querySelector("i");
+        if (icon.classList.contains("far")) {
+          icon.classList.remove("far");
+          icon.classList.add("fas");
+          btn.classList.remove("text-gray-400");
+          btn.classList.add("text-red-500");
+        } else {
+          icon.classList.add("far");
+          icon.classList.remove("fas");
+          btn.classList.add("text-gray-400");
+          btn.classList.remove("text-red-500");
+        }
+      }
     </script>
   </body>
 </html>
