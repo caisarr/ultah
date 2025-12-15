@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Secret Gift 🎁</title>
+    <title>So Proud of You 🌟</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -11,57 +11,85 @@
     />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Caveat:wght@600&display=swap"
       rel="stylesheet"
     />
     <style>
       body {
         font-family: "Plus Jakarta Sans", sans-serif;
-        background: #fff5f7;
+        background: #fffcfc;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
       }
       .font-serif {
         font-family: "Playfair Display", serif;
       }
+      .font-handwriting {
+        font-family: "Caveat", cursive;
+      } /* Font tulisan tangan untuk caption */
 
-      /* Scratch Card Canvas */
-      #scratch-container {
-        position: relative;
-        width: 300px;
-        height: 300px;
-        margin: 0 auto;
-        user-select: none;
-        border-radius: 20px;
+      /* Card Effects */
+      .achievement-card {
+        transition: all 0.4s ease;
+        border: 1px solid #f3f4f6;
         overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
       }
-      #scratch-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="gold"><circle cx="12" cy="12" r="10"/></svg>'),
-          auto;
+      .achievement-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: #fce7f3;
       }
-      .hidden-gift {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+      .achievement-img {
+        transition: transform 0.6s ease;
+      }
+      .achievement-card:hover .achievement-img {
+        transform: scale(1.05);
+      }
+
+      /* Polaroid Style */
+      .polaroid {
         background: white;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
+        padding: 12px 12px 40px 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        transform: rotate(-2deg);
+      }
+      .polaroid:nth-child(even) {
+        transform: rotate(2deg);
+      }
+      .polaroid:hover {
+        transform: scale(1.05) rotate(0deg);
+        z-index: 10;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Hope Cards */
+      .hope-card {
+        background: linear-gradient(135deg, #fff 0%, #fff1f2 100%);
+      }
+
+      /* Decorative Elements */
+      .blob {
+        position: absolute;
+        filter: blur(60px);
+        opacity: 0.4;
+        z-index: -1;
+      }
+
+      /* Mobile Adjustment */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: 80px;
+        }
       }
     </style>
   </head>
   <body class="text-gray-800">
+    <div class="blob bg-pink-300 w-96 h-96 top-0 left-0"></div>
+    <div class="blob bg-amber-200 w-80 h-80 bottom-0 right-0"></div>
+
     <nav
-      class="fixed top-6 left-0 right-0 z-50 flex justify-center w-full px-4"
+      class="hidden md:flex fixed top-6 left-0 right-0 z-50 justify-center w-full px-4"
     >
       <div
         class="bg-white/80 backdrop-blur-md rounded-full px-8 py-4 flex gap-8 shadow-xl border border-white/50"
@@ -72,150 +100,343 @@
         <a href="timeline.html" class="hover:text-pink-600 transition"
           >Journey</a
         >
-        <a href="pencapaian.html" class="text-pink-600 font-bold">Secret</a>
+        <a href="pencapaian.html" class="text-pink-600 font-bold">Proud</a>
         <a href="ucapan.html" class="hover:text-pink-600 transition">Wishes</a>
       </div>
     </nav>
 
-    <section class="min-h-screen flex items-center justify-center py-20 px-6">
-      <div
-        class="container max-w-4xl mx-auto grid md:grid-cols-2 gap-16 items-center"
-      >
-        <div data-aos="fade-right">
-          <span
-            class="text-pink-500 font-bold tracking-widest text-xs uppercase mb-2 block"
-            >Interactive Game</span
-          >
-          <h2 class="text-5xl font-serif text-gray-900 mb-6">
-            Gosok Layar <br />
-            Di Samping 👉
-          </h2>
-          <p class="text-gray-500 mb-8 leading-relaxed">
-            Ada pesan rahasia yang tersembunyi di balik kartu ini. Coba gosok
-            pelan-pelan pakai kursor kamu buat ngeliat isinya!
-          </p>
+    <section class="pt-12 md:pt-32 px-6 text-center max-w-4xl mx-auto mb-16">
+      <div data-aos="fade-down">
+        <span
+          class="inline-block px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-xs font-bold tracking-widest uppercase mb-4"
+          >Gallery of Pride</span
+        >
+        <h1 class="text-4xl md:text-6xl font-serif text-gray-900 mb-6">
+          Look How Far <br />
+          <span class="italic text-pink-600">You've Come</span>
+        </h1>
+        <p
+          class="text-gray-500 leading-relaxed text-sm md:text-lg max-w-2xl mx-auto"
+        >
+          Setiap langkah kecil, setiap senyum lelah, dan setiap keberhasilan
+          kamu tahun ini layak dirayakan. Ini dinding kebanggaanku buat kamu.
+        </p>
+      </div>
+    </section>
 
-          <div
-            class="bg-white p-6 rounded-2xl shadow-lg border border-pink-100"
-          >
-            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-              <i class="fas fa-heart text-pink-500"></i> Fakta Tentangmu:
-            </h3>
-            <ul class="space-y-3 text-gray-600">
-              <li class="flex items-center gap-3">
-                <span
-                  class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-xs"
-                  >1</span
-                >
-                Sabar banget ngadepin aku.
-              </li>
-              <li class="flex items-center gap-3">
-                <span
-                  class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-xs"
-                  >2</span
-                >
-                Selalu cantik, apalagi pas senyum.
-              </li>
-              <li class="flex items-center gap-3">
-                <span
-                  class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-xs"
-                  >3</span
-                >
-                Jago banget bikin aku kangen.
-              </li>
-            </ul>
+    <section class="px-6 pb-20 max-w-6xl mx-auto">
+      <h3 class="text-2xl font-serif font-bold mb-8 text-center md:text-left">
+        <i class="fas fa-trophy text-amber-400 mr-2"></i> Highlight of The Year
+      </h3>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <div
+          class="achievement-card bg-white rounded-2xl relative"
+          data-aos="fade-up"
+          data-aos-delay="0"
+        >
+          <div class="h-48 overflow-hidden rounded-t-2xl relative">
+            <img
+              src="https://via.placeholder.com/400x300"
+              class="achievement-img w-full h-full object-cover"
+              alt="Achievement 1"
+            />
+            <div
+              class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-pink-600 shadow-sm"
+            >
+              Akademik/Karir
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold font-serif mb-2">Graduation Day 🎓</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              Momen paling membanggakan. Liat kamu pake toga dan senyum lega itu
+              priceless banget. Semua begadang kamu terbayar lunas!
+            </p>
           </div>
         </div>
 
-        <div data-aos="zoom-in" class="relative">
-          <div
-            class="absolute inset-0 bg-gradient-to-tr from-pink-300 to-amber-200 rounded-full blur-3xl opacity-40 -z-10"
-          ></div>
-
-          <div id="scratch-container">
-            <div class="hidden-gift">
-              <i
-                class="fas fa-gift text-5xl text-pink-500 mb-4 animate-bounce"
-              ></i>
-              <h3 class="font-serif text-xl font-bold">Selamat Ulang Tahun!</h3>
-              <p class="text-sm text-gray-500 mt-2">
-                Kado aslinya ada di tas aku ya wkwk. Love you! ❤️
-              </p>
-            </div>
-            <canvas id="scratch-canvas" width="300" height="300"></canvas>
-          </div>
-
-          <p class="text-center text-sm text-gray-400 mt-6 italic">
-            Gunakan mouse/jari untuk menggosok area di atas.
-          </p>
-
-          <div class="text-center mt-8">
-            <a
-              href="ucapan.html"
-              class="text-pink-600 font-bold hover:underline"
-              >Baca Ucapan Teman &rarr;</a
+        <div
+          class="achievement-card bg-white rounded-2xl relative"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          <div class="h-48 overflow-hidden rounded-t-2xl relative">
+            <img
+              src="https://via.placeholder.com/400x300"
+              class="achievement-img w-full h-full object-cover"
+              alt="Achievement 2"
+            />
+            <div
+              class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm"
             >
+              Hobi/Skill
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold font-serif mb-2">Masterchef Era 🍳</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              Tahun ini kamu makin jago masak! Dari kue gosong sampe jadi kue
+              enak, prosesnya keren banget. (Aku siap jadi tester terus).
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="achievement-card bg-white rounded-2xl relative"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          <div class="h-48 overflow-hidden rounded-t-2xl relative">
+            <img
+              src="https://via.placeholder.com/400x300"
+              class="achievement-img w-full h-full object-cover"
+              alt="Achievement 3"
+            />
+            <div
+              class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-purple-600 shadow-sm"
+            >
+              Self Growth
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold font-serif mb-2">Lebih Happy ✨</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              Pencapaian terbesar: Kamu lebih sering senyum, lebih sayang diri
+              sendiri, dan nggak gampang nyerah. Proud!
+            </p>
           </div>
         </div>
       </div>
     </section>
 
+    <section class="py-16 bg-pink-50 border-y border-pink-100 overflow-hidden">
+      <div class="container mx-auto px-6 max-w-6xl">
+        <h3 class="text-2xl font-serif font-bold mb-10 text-center">
+          <i class="fas fa-camera-retro text-pink-500 mr-2"></i> Little Moments
+          Matter
+        </h3>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+          <div class="polaroid" data-aos="zoom-in" data-aos-delay="0">
+            <div class="aspect-square bg-gray-200 overflow-hidden mb-3">
+              <img
+                src="https://via.placeholder.com/300x300"
+                class="w-full h-full object-cover hover:scale-110 transition duration-500"
+              />
+            </div>
+            <p class="font-handwriting text-center text-xl text-gray-700">
+              Cantik banget disini ❤️
+            </p>
+          </div>
+
+          <div class="polaroid" data-aos="zoom-in" data-aos-delay="100">
+            <div class="aspect-square bg-gray-200 overflow-hidden mb-3">
+              <img
+                src="https://via.placeholder.com/300x300"
+                class="w-full h-full object-cover hover:scale-110 transition duration-500"
+              />
+            </div>
+            <p class="font-handwriting text-center text-xl text-gray-700">
+              Pas kita nyasar wkwk
+            </p>
+          </div>
+
+          <div class="polaroid" data-aos="zoom-in" data-aos-delay="200">
+            <div class="aspect-square bg-gray-200 overflow-hidden mb-3">
+              <img
+                src="https://via.placeholder.com/300x300"
+                class="w-full h-full object-cover hover:scale-110 transition duration-500"
+              />
+            </div>
+            <p class="font-handwriting text-center text-xl text-gray-700">
+              Outfit favoritmu 👗
+            </p>
+          </div>
+
+          <div class="polaroid" data-aos="zoom-in" data-aos-delay="300">
+            <div class="aspect-square bg-gray-200 overflow-hidden mb-3">
+              <img
+                src="https://via.placeholder.com/300x300"
+                class="w-full h-full object-cover hover:scale-110 transition duration-500"
+              />
+            </div>
+            <p class="font-handwriting text-center text-xl text-gray-700">
+              My favorite view 👀
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div
+        class="container mx-auto px-6 max-w-4xl grid md:grid-cols-2 gap-12 items-center"
+      >
+        <div data-aos="fade-right">
+          <div class="relative">
+            <div
+              class="absolute inset-0 bg-pink-200 transform rotate-3 rounded-2xl"
+            ></div>
+            <img
+              src="https://via.placeholder.com/400x500"
+              class="relative rounded-2xl shadow-xl w-full object-cover transform -rotate-2 hover:rotate-0 transition duration-500"
+              alt="Proud Moment"
+            />
+          </div>
+        </div>
+        <div data-aos="fade-left">
+          <h2
+            class="text-3xl md:text-4xl font-serif font-bold mb-6 text-gray-900"
+          >
+            Dear, <span class="text-pink-600">Birthday Girl</span>
+          </h2>
+          <div
+            class="space-y-4 text-gray-600 leading-loose text-sm md:text-base italic"
+          >
+            <p>
+              "Aku cuma mau bilang, aku saksi mata gimana kamu berjuang setahun
+              ini. Aku liat capeknya kamu, aku liat senyum kamu pas berhasil,
+              dan aku liat gimana kamu bangkit lagi pas lagi down."
+            </p>
+            <p>
+              Jangan pernah ngerasa kecil ya. Bagi aku, kamu itu hebat banget.
+              Caramu menghadapi masalah, caramu peduli sama orang lain, itu
+              bikin aku makin bangga punya kamu."
+            </p>
+            <p class="font-bold text-gray-900 not-italic mt-4">— Your #1 Fan</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h2
+          class="text-3xl md:text-5xl font-serif font-bold text-gray-900 mb-4"
+        >
+          Next Chapter ✨
+        </h2>
+        <p class="text-gray-500">
+          Manifestasi dan harapan untuk tahun yang baru.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div
+          class="hope-card p-6 rounded-2xl border border-pink-100 flex items-start gap-4"
+          data-aos="zoom-in"
+        >
+          <div class="bg-white p-3 rounded-full shadow-sm text-pink-500">
+            <i class="fas fa-plane"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg mb-1">More Adventures</h4>
+            <p class="text-sm text-gray-500">
+              Semoga tahun depan kita bisa liburan ke tempat impian kamu
+              (Bali/Jepang/Korea? Let's go!).
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="hope-card p-6 rounded-2xl border border-pink-100 flex items-start gap-4"
+          data-aos="zoom-in"
+          data-aos-delay="100"
+        >
+          <div class="bg-white p-3 rounded-full shadow-sm text-amber-500">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg mb-1">Financial Freedom</h4>
+            <p class="text-sm text-gray-500">
+              Rezeki makin lancar, tabungan nambah, dan bisa beli barang
+              wishlist tanpa mikir harga.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="hope-card p-6 rounded-2xl border border-pink-100 flex items-start gap-4"
+          data-aos="zoom-in"
+          data-aos-delay="200"
+        >
+          <div class="bg-white p-3 rounded-full shadow-sm text-green-500">
+            <i class="fas fa-smile-beam"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg mb-1">Happiness & Health</h4>
+            <p class="text-sm text-gray-500">
+              Yang paling penting, sehat selalu fisik & mental. Kurangin
+              overthinking, banyakin happy.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="hope-card p-6 rounded-2xl border border-pink-100 flex items-start gap-4"
+          data-aos="zoom-in"
+          data-aos-delay="300"
+        >
+          <div class="bg-white p-3 rounded-full shadow-sm text-purple-500">
+            <i class="fas fa-infinity"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg mb-1">Us, Forever</h4>
+            <p class="text-sm text-gray-500">
+              Semoga kita makin dewasa bareng, makin ngerti satu sama lain, dan
+              langgeng terus.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-16">
+        <a
+          href="ucapan.html"
+          class="inline-block px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-pink-600 transition duration-300 shadow-xl text-sm font-bold tracking-wide"
+        >
+          See What Others Say <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </section>
+
+    <nav
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 z-[100] pb-safe"
+    >
+      <div class="flex justify-around items-center h-16">
+        <a
+          href="index.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-home text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Home</span></a
+        >
+        <a
+          href="timeline.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-history text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Journey</span></a
+        >
+        <a
+          href="pencapaian.html"
+          class="flex flex-col items-center justify-center w-full h-full text-pink-600 font-bold transition"
+          ><i class="fas fa-star text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Proud</span></a
+        >
+        <a
+          href="ucapan.html"
+          class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-pink-600 transition"
+          ><i class="fas fa-heart text-lg mb-1"></i
+          ><span class="text-[10px] font-medium">Wishes</span></a
+        >
+      </div>
+    </nav>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-      AOS.init();
-
-      // Scratch Card Logic
-      const canvas = document.getElementById("scratch-canvas");
-      const ctx = canvas.getContext("2d");
-      const container = document.getElementById("scratch-container");
-      let isDrawing = false;
-
-      // Fill with gray/gold overlay
-      ctx.fillStyle = "#cbd5e1"; // Gray overlay
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Add text "GOSOK DI SINI"
-      ctx.fillStyle = "#64748b";
-      ctx.font = "bold 20px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText("GOSOK DI SINI ✨", 150, 150);
-
-      // Drawing Settings
-      ctx.globalCompositeOperation = "destination-out"; // This makes it erase
-      ctx.lineWidth = 30;
-      ctx.lineCap = "round";
-
-      function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: (evt.clientX || evt.touches[0].clientX) - rect.left,
-          y: (evt.clientY || evt.touches[0].clientY) - rect.top,
-        };
-      }
-
-      function startDraw(e) {
-        isDrawing = true;
-        draw(e);
-      }
-      function endDraw() {
-        isDrawing = false;
-      }
-      function draw(e) {
-        if (!isDrawing) return;
-        e.preventDefault();
-        const pos = getMousePos(canvas, e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-      }
-
-      canvas.addEventListener("mousedown", startDraw);
-      canvas.addEventListener("touchstart", startDraw);
-      window.addEventListener("mouseup", endDraw);
-      window.addEventListener("touchend", endDraw);
-      canvas.addEventListener("mousemove", draw);
-      canvas.addEventListener("touchmove", draw);
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
     </script>
   </body>
 </html>
